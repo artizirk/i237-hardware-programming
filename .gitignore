@@ -1,6 +1,9 @@
 # Build artefacts
 bin/*
 
+# astyle formatter preserved files
+*.orig
+
 #
 # Templates from https://github.com/github/gitignore
 #
