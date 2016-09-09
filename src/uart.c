@@ -35,7 +35,7 @@ void uart3_init(void)
     UCSR3A &= ~(_BV(U2X3));
 #endif
     UCSR3C = _BV(UCSZ31) | _BV(UCSZ30); /* 8-bit data */
-    UCSR3B = _BV(TXEN3);   /* Enable RX and TX */
+    UCSR3B = _BV(TXEN3);   /* Enable TX */
 }
 
 int uart0_putchar(char c, FILE *stream)
