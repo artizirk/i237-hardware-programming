@@ -14,7 +14,7 @@ int print_ascii_tbl (FILE *stream) {
 int print_for_human (FILE *stream, const unsigned char *array, const int len) {
     for (int i = 0; i < len; i++) {
         if (array[i] >= ' ' && array[i] <= '~') {
-            if(!fprintf(stream, "%c ", array[i])) {
+            if(!fprintf(stream, "%c", array[i])) {
                 return 0;
             }
         } else {
@@ -23,5 +23,5 @@ int print_for_human (FILE *stream, const unsigned char *array, const int len) {
             }
         }
     }
-    return 0;
+    return fprintf(stream, "\n");;
 }
