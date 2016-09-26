@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <string.h>
 #include <avr/io.h>
 #include <util/delay.h>
+#include "hmi_msg.h"
 #include "uart.h"
 #include "print_helper.h"
 
@@ -20,10 +22,26 @@ int main (void)
     fprintf(stderr, "avr-libc version: %s\n", __AVR_LIBC_VERSION_STRING__);
     /* End stdio init and info print */
 
+    fprintf(stdout, STUD_NAME "\n");
     /* ASCII table print */
-    print_ascii_tbl(stderr);
+    print_ascii_tbl(stdout);
+    unsigned char ascii[128] = {0};
+    for (unsigned char i = 0; i < sizeof(ascii); i++) {
+        ascii[i] = i;
+    }
+    print_for_human(stdout, ascii, sizeof(ascii));
 
     while (1) {
+        char month_first_leter;
+        fprintf(stdout, "Enter Month name first letter >");
+        fscanf(stdin, "%c", &month_first_leter);
+        fprintf(stdout, "%c\n", month_first_leter);
+        for (int i = 0; i < 6; i++) {
+            if (!strncmp(strupr(&month_first_leter), ENG_MONTH[i], 1)) {
+                fprintf(stdout, "%s\n", ENG_MONTH[i]);
+            }
+        }
+
         /* set pin 3 high to turn led on */
         PORTA |= _BV(PORTA3);
         _delay_ms(BLINK_DELAY_MS);
