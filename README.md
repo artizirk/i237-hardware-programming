@@ -11,23 +11,31 @@ by Silver Kits.
 
 Currently to test this code you have to clone the repository
 
-    git clone https://git.wut.ee/arti/i237.git hardware
-    cd hardware
+```bash
+git clone https://git.wut.ee/arti/i237.git hardware
+cd hardware
+```
 
 And export a enviroment variable that points to a Arduino Mega board. The
 real path will depend on the OS and Computer that you are using. For me it is
 usualy `/dev/ttyACM0`.
 
-    export ARDUINO=/dev/ttyACM0
+```bash
+export ARDUINO=/dev/ttyACM0
+```
 
 After that you can `make` the project.
 
-    make clean
-    make
-    make install
+```bash
+make clean
+make
+make install
+```bash
 
 You can also chekcout previous labs using `git checkout <lab name>`. For example
 
-    git checkout lab02
+```bash
+git checkout lab02
+```
 
 Don't forget to `make clean` after each checkout!
