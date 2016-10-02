@@ -30,7 +30,7 @@ After that you can `make` the project.
 make clean
 make
 make install
-```bash
+```
 
 You can also chekcout previous labs using `git checkout <lab name>`. For example
 
