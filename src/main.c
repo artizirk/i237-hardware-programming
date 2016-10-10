@@ -37,7 +37,7 @@ int main (void)
         fscanf(stdin, "%c", &month_first_leter);
         fprintf(stdout, "%c\n", month_first_leter);
         for (int i = 0; i < 6; i++) {
-            if (!strncmp(strupr(&month_first_leter), ENG_MONTH[i], 1)) {
+            if (!strncmp(&month_first_leter, ENG_MONTH[i], 1)) {
                 fprintf(stdout, "%s\n", ENG_MONTH[i]);
             }
         }
