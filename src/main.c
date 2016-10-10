@@ -61,7 +61,6 @@ int main (void)
         lcd_puts_P(PSTR("                ")); /* Clear the end of the line */
         lcd_goto(0x40); /* Got to the beginning of the next line */
 
-
         /* set pin 3 low to turn led off */
         PORTA &= ~_BV(PORTA3);
         _delay_ms(BLINK_DELAY_MS);
