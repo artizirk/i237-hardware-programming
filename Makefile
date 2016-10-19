@@ -8,6 +8,7 @@ CC = avr-gcc
 OBJCOPY = avr-objcopy
 AVRDUDE = avrdude
 CODE_FORMATTER = tooling/format-code.sh
+AVRSIZE = avr-size
 
 BOARD = atmega2560
 
@@ -62,6 +63,9 @@ AVRDUDEARGS =	-p $(BOARD) \
 				-V \
 				-D
 
+AVRSIZEARGS =	-C \
+				--mcu=$(BOARD)
+
 all: $(ELF) $(TARGET)
 
 %.o : %.c
@@ -85,4 +89,7 @@ install:
 format:
 	$(CODE_FORMATTER) $(SRC)
 
-.PHONY: clean install format
+size:
+	$(AVRSIZE) $(AVRSIZEARGS) $(ELF)
+
+.PHONY: clean install format size
