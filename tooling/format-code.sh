@@ -13,15 +13,13 @@ then
     exit 1
 fi
 
-# 
+#
 for FILE in "$@"
 do
     RESULT="$(astyle    --style=1tbs \
                         --indent-col1-comments \
-                        --break-blocks \
                         --pad-oper \
                         --pad-header \
-                        --delete-empty-lines \
                         --add-brackets \
                         --convert-tabs \
                         --max-code-length=80 \

@@ -58,6 +58,7 @@ int main (void)
                 lcd_putc(' ');
             }
         }
+
         lcd_puts_P(PSTR("                ")); /* Clear the end of the line */
         lcd_goto(0x40); /* Got to the beginning of the next line */
 
