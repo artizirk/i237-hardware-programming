@@ -43,12 +43,13 @@ CFLAGS =	-Wall \
 			-Werror \
 			-Wfatal-errors \
 			-Os \
+			-flto \
+			-fdata-sections \
+			-ffunction-sections \
 			-mmcu=$(BOARD) \
 			-DF_CPU=16000000UL \
 			-DGIT_DESCR=\"$(shell git describe --abbrev=6 --dirty --always --tags --long)\" \
-			-std=c11 \
-			-flto \
-			-fdata-sections -ffunction-sections
+			-std=c11
 
 # Linker flags
 LDFLAGS =	-mmcu=$(BOARD) \
