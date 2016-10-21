@@ -91,7 +91,7 @@ install:
 	$(AVRDUDE) $(AVRDUDEARGS) -U flash:w:$(TARGET)
 
 format:
-	$(CODE_FORMATTER) $(SRC)
+	$(CODE_FORMATTER) $(SRCDIR)/*.c
 
 size:
 	$(AVRSIZE) $(AVRSIZEARGS) $(ELF)
