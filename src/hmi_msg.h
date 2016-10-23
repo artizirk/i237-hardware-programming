@@ -2,10 +2,10 @@
 #ifndef _HMI_MSG_H_
 #define _HMI_MSG_H_
 
-const char PROG_VERSION[]  PROGMEM = "Version: %s built on: %s %s\n";
-const char LIBC_VERSION[]  PROGMEM = "avr-libc version: %s\n";
-const char STUD_NAME[]     PROGMEM = "Arti Zirk";
-const char GET_MONTH_MSG[] PROGMEM = "Enter Month name first letter >";
+#define PROG_VERSION "Version: "GIT_DESCR" built on: "__DATE__" "__TIME__"\n"
+#define LIBC_VERSION "avr-libc version: "__AVR_LIBC_VERSION_STRING__"\n"
+#define STUD_NAME "Arti Zirk"
+#define GET_MONTH_MSG "Enter Month name first letter >"
 const char ENG_MONTH[6][9] PROGMEM = {
                                         "January",
                                         "February",
@@ -15,4 +15,5 @@ const char ENG_MONTH[6][9] PROGMEM = {
                                         "June",
                                       };
 
+                                            };*/
 #endif /* _HMI_MSG_H_ */

@@ -23,14 +23,13 @@ int main (void)
     /* End init */
 
     /* Print version info to stderr */
-    fprintf_P(stderr, PROG_VERSION, GIT_DESCR, __DATE__, __TIME__);
-    fprintf_P(stderr, LIBC_VERSION, __AVR_LIBC_VERSION_STRING__);
+    fprintf_P(stderr, PSTR(PROG_VERSION));
+    fprintf_P(stderr, PSTR(LIBC_VERSION));
     /* End version print */
 
-    fprintf_P(stdout, STUD_NAME);
+    fprintf_P(stdout, PSTR(STUD_NAME));
     fputc('\n', stdout); /* Add a new line to the uart printout */
-    lcd_puts_P(STUD_NAME);
-    lcd_goto(0x40); /* Got to the beginning of the next line */
+    lcd_puts_P(PSTR(STUD_NAME));
 
     /* ASCII table print */
     print_ascii_tbl(stdout);
@@ -47,9 +46,10 @@ int main (void)
 
         /* Month search and print */
         char month_first_leter;
-        fprintf_P(stdout, GET_MONTH_MSG);
+        fprintf_P(stdout, PSTR(GET_MONTH_MSG));
         fscanf(stdin, "%c", &month_first_leter);
         fprintf(stdout, "%c\n", month_first_leter);
+        lcd_goto(0x40); /* Got to the beginning of the next line */
         for (int i = 0; i < 6; i++) {
             if (!strncmp_P(&month_first_leter, ENG_MONTH[i], 1)) {
                 fprintf_P(stdout, ENG_MONTH[i]);
@@ -60,7 +60,7 @@ int main (void)
         }
 
         lcd_puts_P(PSTR("                ")); /* Clear the end of the line */
-        lcd_goto(0x40); /* Got to the beginning of the next line */
+
 
         /* set pin 3 low to turn led off */
         PORTA &= ~_BV(PORTA3);
