@@ -23,7 +23,8 @@ int main (void)
     /* End init */
 
     /* Print version info to stderr */
-    fprintf_P(stderr, PSTR(PROG_VERSION), PSTR(GIT_DESCR), PSTR(__DATE__), PSTR(__TIME__));
+    fprintf_P(stderr, PSTR(PROG_VERSION),
+              PSTR(GIT_DESCR), PSTR(__DATE__), PSTR(__TIME__));
     fprintf_P(stderr, PSTR(LIBC_VERSION), PSTR(__AVR_LIBC_VERSION_STRING__));
     /* End version print */
 
@@ -45,13 +46,13 @@ int main (void)
         _delay_ms(BLINK_DELAY_MS);
 
         /* Month search and print */
-        char month_first_leter;
+        char letter;
         fprintf_P(stdout, PSTR(GET_MONTH_MSG));
-        fscanf(stdin, "%c", &month_first_leter);
-        fprintf(stdout, "%c\n", month_first_leter);
+        fscanf(stdin, "%c", &letter);
+        fprintf(stdout, "%c\n", letter);
         lcd_goto(0x40); /* Got to the beginning of the next line */
         for (int i = 0; i < 6; i++) {
-            if (!strncmp_P(&month_first_leter, (PGM_P)pgm_read_word(&ENG_MONTH[i]), 1)) {
+            if (!strncmp_P(&letter, (PGM_P)pgm_read_word(&ENG_MONTH[i]), 1)) {
                 fprintf_P(stdout, (PGM_P)pgm_read_word(&ENG_MONTH[i]));
                 fputc('\n', stdout);
                 lcd_puts_P((PGM_P)pgm_read_word(&ENG_MONTH[i]));
@@ -60,7 +61,6 @@ int main (void)
         }
 
         lcd_puts_P(PSTR("                ")); /* Clear the end of the line */
-
 
         /* set pin 3 low to turn led off */
         PORTA &= ~_BV(PORTA3);
