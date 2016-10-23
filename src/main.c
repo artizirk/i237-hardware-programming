@@ -23,8 +23,8 @@ int main (void)
     /* End init */
 
     /* Print version info to stderr */
-    fprintf_P(stderr, PSTR(PROG_VERSION));
-    fprintf_P(stderr, PSTR(LIBC_VERSION));
+    fprintf_P(stderr, PSTR(PROG_VERSION), PSTR(GIT_DESCR), PSTR(__DATE__), PSTR(__TIME__));
+    fprintf_P(stderr, PSTR(LIBC_VERSION), PSTR(__AVR_LIBC_VERSION_STRING__));
     /* End version print */
 
     fprintf_P(stdout, PSTR(STUD_NAME));
