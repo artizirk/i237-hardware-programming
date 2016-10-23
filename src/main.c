@@ -33,7 +33,7 @@ int main (void)
 
     /* ASCII table print */
     print_ascii_tbl(stdout);
-    unsigned char ascii[128] = {0};
+    unsigned char ascii[128];
     for (unsigned char i = 0; i < sizeof(ascii); i++) {
         ascii[i] = i;
     }
@@ -51,10 +51,10 @@ int main (void)
         fprintf(stdout, "%c\n", month_first_leter);
         lcd_goto(0x40); /* Got to the beginning of the next line */
         for (int i = 0; i < 6; i++) {
-            if (!strncmp_P(&month_first_leter, ENG_MONTH[i], 1)) {
-                fprintf_P(stdout, ENG_MONTH[i]);
+            if (!strncmp_P(&month_first_leter, (PGM_P)pgm_read_word(&ENG_MONTH[i]), 1)) {
+                fprintf_P(stdout, (PGM_P)pgm_read_word(&ENG_MONTH[i]));
                 fputc('\n', stdout);
-                lcd_puts_P(ENG_MONTH[i]);
+                lcd_puts_P((PGM_P)pgm_read_word(&ENG_MONTH[i]));
                 lcd_putc(' ');
             }
         }
