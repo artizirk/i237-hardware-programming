@@ -52,10 +52,10 @@ int main (void)
         fprintf(stdout, "%c\n", letter);
         lcd_goto(0x40); /* Got to the beginning of the next line */
         for (int i = 0; i < 6; i++) {
-            if (!strncmp_P(&letter, (PGM_P)pgm_read_word(&ENG_MONTH[i]), 1)) {
-                fprintf_P(stdout, (PGM_P)pgm_read_word(&ENG_MONTH[i]));
+            if (!strncmp_P(&letter, (PGM_P)pgm_read_word(&months[i]), 1)) {
+                fprintf_P(stdout, (PGM_P)pgm_read_word(&months[i]));
                 fputc('\n', stdout);
-                lcd_puts_P((PGM_P)pgm_read_word(&ENG_MONTH[i]));
+                lcd_puts_P((PGM_P)pgm_read_word(&months[i]));
                 lcd_putc(' ');
             }
         }
