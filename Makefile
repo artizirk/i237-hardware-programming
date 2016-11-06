@@ -90,6 +90,13 @@ clean:
 	rm -fr $(BUILD_LIBS_DIR)/*/*.o
 
 install:
+	@if [ ! -c "$(ARDUINO)" ]; then \
+		echo -e "\n\nEnvironment variable ARDUINO is \"$(ARDUINO)\" and that is invalid."\
+				"\nDid you do \"export ARDUINO=/dev/ttyACM0\" before running make install?"\
+				"\nAlso make sure that ARDUINO env var points to a valid tty device\n\n"; \
+		exit 1;\
+	fi
+	
 	$(AVRDUDE) $(AVRDUDEARGS) -U flash:w:$(TARGET)
 
 format:
