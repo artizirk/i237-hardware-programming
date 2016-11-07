@@ -6,6 +6,7 @@
 #define LIBC_VERSION "avr-libc version: %S\n"
 #define STUD_NAME "Arti Zirk"
 #define GET_MONTH_MSG "Enter Month name first letter >"
+#define UPTIME_MSG "Uptime: %lu s"
 
 const char m1[]  PROGMEM = "January";
 const char m2[] PROGMEM = "February";

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
@@ -11,19 +12,28 @@
 #include "../lib/hd44780_111/hd44780.h"
 
 #define BAUDRATE 9600
-#define BLINK_DELAY_MS 100
 
 // For configuring arduino mega pin 25
 #define LED_INIT DDRA |= _BV(DDA3);
-#define LED_ON PORTA |= _BV(PORTA3)
-#define LED_OFF PORTA &= ~_BV(PORTA3)
-#define LED_DELAY _delay_ms(BLINK_DELAY_MS)
+#define LED_TOGGLE PORTA ^= _BV(PORTA3)
+
+static inline void init_system_clock(void)
+{
+    TCCR5A = 0; // Clear control register A
+    TCCR5B = 0; // Clear control register B
+    TCCR5B |= _BV(WGM52) | _BV(CS52); // CTC and fCPU/256
+    OCR5A = 62549; // 1 s
+    TIMSK5 |= _BV(OCIE5A); // Output Compare A Match Interrupt Enable
+}
 
 static inline void init_hw (void)
 {
     // IO init
     /// Set arduino pin 25 as output
     LED_INIT;
+
+    // System clock
+    init_system_clock();
 
     // UART init
     uart0_init(UART_BAUD_SELECT(BAUDRATE, F_CPU));
@@ -59,6 +69,7 @@ static inline void start_ui (void)
     }
     print_for_human(stdout, ascii, sizeof(ascii));
 
+    // Bootstrap search_month message
     fprintf_P(stdout, PSTR(GET_MONTH_MSG));
 }
 
@@ -82,20 +93,32 @@ static inline void search_month (void)
     fprintf_P(stdout, PSTR(GET_MONTH_MSG));
 }
 
+static inline void heartbeat (void) {
+    static time_t time_prev;
+    time_t time_cur = time(NULL);
+    if (time_cur <= time_prev) {
+        return;
+    }
+    time_prev = time_cur;
+    fprintf_P(stderr, PSTR(UPTIME_MSG "\n"), time_cur);
+    LED_TOGGLE;
+}
+
 int main (void)
 {
     init_hw();
     start_ui();
 
     while (1) {
-        LED_ON;
-        LED_DELAY;
-
+        heartbeat();
         if (uart0_available()) {
             search_month();
         }
-
-        LED_OFF;
-        LED_DELAY;
     }
+}
+
+// System clock
+ISR(TIMER5_COMPA_vect)
+{
+    system_tick();
 }
