@@ -52,9 +52,9 @@ static inline void init_hw (void)
 static inline void start_ui (void)
 {
     // Print program and libc versions
-    fprintf_P(stderr, PSTR(PROG_VERSION),
+    fprintf_P(stderr, PSTR(PROG_VERSION "\n"),
               PSTR(GIT_DESCR), PSTR(__DATE__), PSTR(__TIME__));
-    fprintf_P(stderr, PSTR(LIBC_VERSION), PSTR(__AVR_LIBC_VERSION_STRING__));
+    fprintf_P(stderr, PSTR(LIBC_VERSION "\n"), PSTR(__AVR_LIBC_VERSION_STRING__));
 
     // print student name
     fprintf_P(stdout, PSTR(STUD_NAME));
@@ -89,11 +89,15 @@ static inline void search_month (void)
         }
     }
 
+    // this is fine because even when the hd44780 address counter goes over 0xf4
+    // we still have quite a few addresses left until address counter overflow
+    // and we also dont care about the data that is at the end of the ddram
     lcd_puts_P(PSTR("                ")); // Clear the end of the line
     fprintf_P(stdout, PSTR(GET_MONTH_MSG));
 }
 
-static inline void heartbeat (void) {
+static inline void heartbeat (void)
+{
     static time_t time_prev;
     time_t time_cur = time(NULL);
     if (time_cur <= time_prev) {

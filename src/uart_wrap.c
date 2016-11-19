@@ -17,6 +17,10 @@ int uart0_putc_wrap(char c, FILE *stream)
 int uart0_getc_wrap(FILE *stream)
 {
     (void) stream;
+    // Probabbly should add some error checking in here but because
+    // this function is only called out when there is at least one character
+    // available in the input buffer (see main.c line 114) then error checking
+    // is not currently necessary.
     return (char)uart0_getc();
 }
 
