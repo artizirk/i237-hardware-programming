@@ -7,4 +7,6 @@
 #define GET_MONTH_MSG "Enter Month name first letter >"
 #define UPTIME_MSG "Uptime: %lu s"
 
+extern PGM_P const months[];
+
 #endif /* _HMI_MSG_H_ */
