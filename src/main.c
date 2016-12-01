@@ -10,12 +10,20 @@
 #include "uart_wrap.h"
 #include "print_helper.h"
 #include "../lib/hd44780_111/hd44780.h"
+#include "../lib/helius_microrl/microrl.h"
+#include "cli_microrl.h"
+
 
 #define BAUDRATE 9600
 
 // For configuring arduino mega pin 25
 #define LED_INIT DDRA |= _BV(DDA3);
 #define LED_TOGGLE PORTA ^= _BV(PORTA3)
+#define UART_STATUS_MASK    0x00FF
+
+// Create microrl object and pointer on it
+static microrl_t rl;
+static microrl_t *prl = &rl;
 
 static inline void init_system_clock(void)
 {
@@ -25,6 +33,7 @@ static inline void init_system_clock(void)
     OCR5A = 62549; // 1 s
     TIMSK5 |= _BV(OCIE5A); // Output Compare A Match Interrupt Enable
 }
+
 
 static inline void init_hw (void)
 {
@@ -51,51 +60,20 @@ static inline void init_hw (void)
 
 static inline void start_ui (void)
 {
-    // Print program and libc versions
-    fprintf_P(stderr, PSTR(PROG_VERSION "\n"),
-              PSTR(GIT_DESCR), PSTR(__DATE__), PSTR(__TIME__));
-    fprintf_P(stderr, PSTR(LIBC_VERSION "\n"), PSTR(__AVR_LIBC_VERSION_STRING__));
+    print_version(stderr);
 
     // print student name
     fprintf_P(stdout, PSTR(STUD_NAME));
     fputc('\n', stdout); // Add a new line to the uart printout
     lcd_puts_P(PSTR(STUD_NAME));
-
-    // ASCII table print
-    print_ascii_tbl(stdout);
-    unsigned char ascii[128];
-    for (unsigned char i = 0; i < sizeof(ascii); i++) {
-        ascii[i] = i;
-    }
-    print_for_human(stdout, ascii, sizeof(ascii));
-
-    // Bootstrap search_month message
-    fprintf_P(stdout, PSTR(GET_MONTH_MSG));
 }
 
-static inline void search_month (void)
+static inline void start_cli(void)
 {
-    char letter;
-
-    fscanf(stdin, "%c", &letter);
-    fprintf(stdout, "%c\n", letter);
-    lcd_goto(0x40); // Got to the beginning of the next line
-    char spaces_to_print = 16;
-    for (int i = 0; i < 6; i++) {
-        if (!strncmp_P(&letter, (PGM_P)pgm_read_word(&months[i]), 1)) {
-            char printed_count;
-            printed_count = fprintf_P(stdout, (PGM_P)pgm_read_word(&months[i]));
-            fputc('\n', stdout);
-            lcd_puts_P((PGM_P)pgm_read_word(&months[i]));
-            lcd_putc(' ');
-            spaces_to_print -= (printed_count + 1);
-        }
-    }
-    // Clear the end of the line
-    for (; spaces_to_print > -1; spaces_to_print--) {
-        lcd_putc(' ');
-    }
-    fprintf_P(stdout, PSTR(GET_MONTH_MSG));
+    // Call init with ptr to microrl instance and print callback
+    microrl_init (prl, cli_print);
+    // Set callback for execute
+    microrl_set_execute_callback (prl, cli_execute);
 }
 
 static inline void heartbeat (void)
@@ -110,18 +88,20 @@ static inline void heartbeat (void)
     LED_TOGGLE;
 }
 
+
 int main (void)
 {
     init_hw();
     start_ui();
+    start_cli();
 
     while (1) {
         heartbeat();
-        if (uart0_available()) {
-            search_month();
-        }
+        // CLI commands are handled in cli_execute()
+        microrl_insert_char (prl, cli_get_char());
     }
 }
+
 
 // System clock
 ISR(TIMER5_COMPA_vect)
