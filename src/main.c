@@ -80,19 +80,21 @@ static inline void search_month (void)
     fscanf(stdin, "%c", &letter);
     fprintf(stdout, "%c\n", letter);
     lcd_goto(0x40); // Got to the beginning of the next line
+    char spaces_to_print = 16;
     for (int i = 0; i < 6; i++) {
         if (!strncmp_P(&letter, (PGM_P)pgm_read_word(&months[i]), 1)) {
-            fprintf_P(stdout, (PGM_P)pgm_read_word(&months[i]));
+            char printed_count;
+            printed_count = fprintf_P(stdout, (PGM_P)pgm_read_word(&months[i]));
             fputc('\n', stdout);
             lcd_puts_P((PGM_P)pgm_read_word(&months[i]));
             lcd_putc(' ');
+            spaces_to_print -= (printed_count + 1);
         }
     }
-
-    // this is fine because even when the hd44780 address counter goes over 0xf4
-    // we still have quite a few addresses left until address counter overflow
-    // and we also dont care about the data that is at the end of the ddram
-    lcd_puts_P(PSTR("                ")); // Clear the end of the line
+    // Clear the end of the line
+    for (; spaces_to_print > -1; spaces_to_print--) {
+        lcd_putc(' ');
+    }
     fprintf_P(stdout, PSTR(GET_MONTH_MSG));
 }
 
