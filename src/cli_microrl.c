@@ -92,7 +92,6 @@ void cli_handle_month(const char *const *argv)
     putc('\n', stdout);
     lcd_goto(0x40); // Got to the beginning of the next line
     char spaces_to_print = 16;
-    fprintf(stderr, "arg: %s\n", argv[1]);
     for (int i = 0; i < 6; i++) {
         if (!strncmp_P(argv[1],
                        (PGM_P)pgm_read_word(&months[i]),
