@@ -47,7 +47,7 @@ void rfid_add_card(const card_t *card)
     new_card = malloc(sizeof(card_t));
     new_card_user = malloc(strlen(card->user)+1);
     if (!new_card || !new_card_user) {
-        printf(PSTR("Out of memory. Please remove cards.\n"));
+        printf_P(PSTR("Out of memory. Please remove cards.\n"));
         return;
     }
     
@@ -56,6 +56,7 @@ void rfid_add_card(const card_t *card)
     memcpy(new_card->uid, card->uid, card->uid_size);
     strcpy(new_card_user, card->user);
     new_card->user = new_card_user;
+    new_card->next = NULL;
 
     // Update card list
     if (head == NULL) {
@@ -73,7 +74,7 @@ void rfid_add_card(const card_t *card)
 
 void rfid_list_cards(void) {
     if (head == NULL) {
-        printf_P(PSTR("No cards added"));
+        printf_P(PSTR("No cards added\n"));
     } else {
         card_t *current;
         current = head;
@@ -81,7 +82,6 @@ void rfid_list_cards(void) {
             rfid_print_card(current);
             printf("\n");
             current = current->next;
-            
         }
         rfid_print_card(current);
         printf("\n");
