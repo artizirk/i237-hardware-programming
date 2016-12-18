@@ -1,3 +1,20 @@
+/*   Copyright (C) 2016 Arti Zirk <arti.zirk@gmail.com>
+ *
+ *   This file is part of I237 Door Access program.
+ *
+ *   I237 Door Access is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   I237 Door Access is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with I237 Door Access.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -8,7 +25,8 @@
 
 card_t *head = NULL;
 
-void rfid_print_card(const card_t *card) {
+void rfid_print_card(const card_t *card)
+{
     for (uint8_t i = 0; i < card->uid_size; i++) {
         printf("%02X", card->uid[i]);
     }
@@ -22,9 +40,9 @@ card_t* rfid_find_card(const card_t *card)
         current = head;
         while (current != NULL) {
             if ((current->uid_size != card->uid_size) ||
-                !memcmp(current->uid, card->uid, current->uid_size) ||
-                ((card->user != NULL) && !strcmp(current->user, card->user))) {
-                
+                    !memcmp(current->uid, card->uid, current->uid_size) ||
+                    ((card->user != NULL) && !strcmp(current->user, card->user))) {
+
                 return current;
             }
             current = current->next;
@@ -42,18 +60,18 @@ void rfid_add_card(const card_t *card)
         printf_P(PSTR(NOT_ADDING_CARD_MSG2 "\n"));
         return;
     }
-    
+
     // Card doesn't exist, add it
     card_t *new_card;
     char *new_card_user;
     new_card = malloc(sizeof(card_t));
-    new_card_user = malloc(strlen(card->user)+1);
+    new_card_user = malloc(strlen(card->user) + 1);
     if (!new_card || !new_card_user) {
         printf_P(PSTR(OUT_OF_MEMORY_MSG "\n"));
         return;
     }
-    
-    // Copy card data 
+
+    // Copy card data
     new_card->uid_size = card->uid_size;
     memcpy(new_card->uid, card->uid, card->uid_size);
     strcpy(new_card_user, card->user);
@@ -74,7 +92,8 @@ void rfid_add_card(const card_t *card)
     return;
 }
 
-void rfid_list_cards(void) {
+void rfid_list_cards(void)
+{
     if (head == NULL) {
         printf_P(PSTR(NO_CARDS_ADDED_MSG "\n"));
     } else {
@@ -90,7 +109,8 @@ void rfid_list_cards(void) {
     }
 }
 
-void rfid_remove_card_by_user(const char *user) {
+void rfid_remove_card_by_user(const char *user)
+{
     card_t *curr;
     card_t *prev;
     curr = head;
@@ -123,7 +143,7 @@ void rfid_remove_card_by_user(const char *user) {
             prev->next = curr->next;
             free(curr->user);
             free(curr);
-        } else if(prev != NULL && curr->next == NULL) {
+        } else if (prev != NULL && curr->next == NULL) {
             // this is the last card in the list
             prev->next = NULL;
             free(curr->user);

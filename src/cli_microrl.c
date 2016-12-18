@@ -1,3 +1,20 @@
+/*   Copyright (C) 2016 Arti Zirk <arti.zirk@gmail.com>
+ *
+ *   This file is part of I237 Door Access program.
+ *
+ *   I237 Door Access is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   I237 Door Access is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with I237 Door Access.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -135,7 +152,8 @@ void cli_rfid_read(const char *const *argv)
 }
 
 
-void cli_rfid_add(const char *const *argv) {
+void cli_rfid_add(const char *const *argv)
+{
     (void) argv;
     Uid uid;
     card_t card;
@@ -143,23 +161,25 @@ void cli_rfid_add(const char *const *argv) {
         PICC_ReadCardSerial(&uid);
         card.uid_size = uid.size;
         memcpy(&card.uid, &uid.uidByte, uid.size);
-        char *user = malloc(strlen(argv[1])+1);
+        char *user = malloc(strlen(argv[1]) + 1);
         strcpy(user, argv[1]);
         card.user = user;
         rfid_add_card(&card);
         free(user); // card user has ben copied to the linked list
     } else {
         printf_P(PSTR(UNABLE_TO_DETECT_CARD_MSG "\n"));
-    }    
+    }
 }
 
 
-void cli_rfid_remove(const char *const *argv) {
+void cli_rfid_remove(const char *const *argv)
+{
     (void) argv;
     rfid_remove_card_by_user(argv[1]);
 }
 
-void cli_rfid_list(const char *const *argv) {
+void cli_rfid_list(const char *const *argv)
+{
     (void) argv;
     rfid_list_cards();
 }

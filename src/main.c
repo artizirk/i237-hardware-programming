@@ -1,3 +1,20 @@
+/*   Copyright (C) 2016 Arti Zirk <arti.zirk@gmail.com>
+ *
+ *   This file is part of I237 Door Access program.
+ *
+ *   I237 Door Access is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   I237 Door Access is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with I237 Door Access.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #include <stdio.h>
 #include <string.h>
 #include <util/atomic.h>
@@ -55,7 +72,7 @@ static inline uint32_t time(void)
 
 static inline void init_rfid_reader(void)
 {
-    MFRC522_init();	
+    MFRC522_init();
     PCD_Init();
 }
 
@@ -65,7 +82,7 @@ static inline void init_hw (void)
     // IO init
     // Set arduino pin 25 as output
     LED_INIT;
-    
+
     // Set Arduino pin 23 as output
     DOOR_INIT;
 
@@ -81,7 +98,7 @@ static inline void init_hw (void)
     // LCD init
     lcd_init();
     lcd_clrscr();
-    
+
     // Init RFID-RC522
     init_rfid_reader();
 
@@ -119,7 +136,8 @@ static inline void heartbeat (void)
     LED_TOGGLE;
 }
 
-static inline void handle_door() {
+static inline void handle_door()
+{
     Uid uid;
     card_t card;
     uint32_t time_cur = time();
@@ -134,7 +152,7 @@ static inline void handle_door() {
         if (found_card) {
             lcd_goto(0x40);
             lcd_puts(found_card->user);
-            for (int8_t i=16-strlen(found_card->user); i > -1; i--) {
+            for (int8_t i = 16 - strlen(found_card->user); i > -1; i--) {
                 lcd_putc(' ');
             }
             DOOR_OPEN;
@@ -142,23 +160,23 @@ static inline void handle_door() {
             DOOR_CLOSE;
             lcd_goto(0x40);
             lcd_puts_P(access_denied_msg);
-            for (int8_t i=16-strlen_P(access_denied_msg); i > -1; i--) {
+            for (int8_t i = 16 - strlen_P(access_denied_msg); i > -1; i--) {
                 lcd_putc(' ');
             }
         }
         door_open_start = time_cur;
         message_start = time_cur;
     }
-    
-    if ((message_start+5) < time_cur) {
-        message_start = time_cur+5;
+
+    if ((message_start + 5) < time_cur) {
+        message_start = time_cur + 5;
         lcd_goto(0x40);
-        for (int8_t i=16; i > -1; i--) {
+        for (int8_t i = 16; i > -1; i--) {
             lcd_putc(' ');
         }
     }
-    
-    if ((door_open_start+2) < time_cur) {
+
+    if ((door_open_start + 2) < time_cur) {
         DOOR_CLOSE;
     }
 }
