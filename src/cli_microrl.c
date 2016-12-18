@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <avr/pgmspace.h>
@@ -23,7 +24,7 @@ const cli_cmd_t cli_cmds[] = {
     {ascii_cmd, ascii_help, cli_print_ascii_tbls, 0},
     {month_cmd, month_help, cli_handle_month, 1},
     {read_cmd, read_help, cli_rfid_read, 0},
-    {add_cmd, add_help, cli_rfid_add, 0},
+    {add_cmd, add_help, cli_rfid_add, 1},
     {remove_cmd, remove_help, cli_rfid_remove, 0},
     {list_cmd, list_help, cli_rfid_list, 0}
 };
@@ -149,12 +150,14 @@ void cli_rfid_add(const char *const *argv) {
         PICC_ReadCardSerial(&uid);
         card.uid_size = uid.size;
         memcpy(&card.uid, &uid.uidByte, uid.size);
-        card.user = "A user";
+        char *user = malloc(strlen(argv[1])+1);
+        strcpy(user, argv[1]);
+        card.user = user;
         rfid_add_card(&card);
+        free(user); // card user has ben copied to the linked list
     } else {
         printf_P(PSTR("Unable to detect card.\n"));
-    }
-        
+    }    
 }
 
 
