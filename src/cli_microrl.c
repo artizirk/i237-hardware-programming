@@ -7,6 +7,7 @@
 #include "print_helper.h"
 #include "cli_microrl.h"
 #include "../lib/matejx_avr_lib/mfrc522.h"
+#include "rfid.h"
 
 typedef struct cli_cmd {
     PGM_P cmd;
@@ -21,7 +22,10 @@ const cli_cmd_t cli_cmds[] = {
     {ver_cmd, ver_help, cli_print_ver, 0},
     {ascii_cmd, ascii_help, cli_print_ascii_tbls, 0},
     {month_cmd, month_help, cli_handle_month, 1},
-    {read_cmd, read_help, cli_rfid_read, 0}
+    {read_cmd, read_help, cli_rfid_read, 0},
+    {add_cmd, add_help, cli_rfid_add, 0},
+    {remove_cmd, remove_help, cli_rfid_remove, 0},
+    {list_cmd, list_help, cli_rfid_list, 0}
 };
 
 
@@ -118,7 +122,7 @@ void cli_rfid_read(const char *const *argv)
     (void) argv;
     Uid uid;
     Uid *uid_ptr = &uid;
-    printf_P(PSTR("\n"));
+    putc('\n', stdout);
     if (PICC_IsNewCardPresent()) {
         printf("Card selected!\n");
         PICC_ReadCardSerial(uid_ptr);
@@ -132,6 +136,38 @@ void cli_rfid_read(const char *const *argv)
     } else {
         printf_P((PSTR("Unable to select card.\n")));
     }
+}
+
+
+void cli_rfid_add(const char *const *argv) {
+    (void) argv;
+    putc('\n', stdout);
+    Uid uid;
+    card_t card;
+    if (PICC_IsNewCardPresent()) {
+        printf_P(PSTR("Adding a card\n"));
+        PICC_ReadCardSerial(&uid);
+        card.uid_size = uid.size;
+        memcpy(&card.uid, &uid.uidByte, uid.size);
+        card.user = "A user";
+        rfid_add_card(&card);
+    } else {
+        printf_P(PSTR("Unable to detect card.\n"));
+    }
+        
+}
+
+
+void cli_rfid_remove(const char *const *argv) {
+    (void) argv;
+    putc('\n', stdout);
+    printf("TODO: Remove card\n");
+}
+
+void cli_rfid_list(const char *const *argv) {
+    (void) argv;
+    putc('\n', stdout);
+    rfid_list_cards();
 }
 
 
