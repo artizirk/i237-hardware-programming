@@ -21,9 +21,9 @@
 #define READ_CMD "read"
 #define READ_HELP "Read and print out card info that is currently in proximity of the reader"
 #define ADD_CMD "add"
-#define ADD_HELP "Add a new card to the system"
+#define ADD_HELP "Add a new card to the system. Usage: add <username>"
 #define REMOVE_CMD "remove"
-#define REMOVE_HELP "Remove a card from the system"
+#define REMOVE_HELP "Remove a card from the system. Usage: remove <username>"
 #define LIST_CMD "list"
 #define LIST_HELP "List all added cards"
 

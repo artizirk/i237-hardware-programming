@@ -13,13 +13,17 @@
 #include "../lib/helius_microrl/microrl.h"
 #include "cli_microrl.h"
 #include "../lib/matejx_avr_lib/mfrc522.h"
+#include "rfid.h"
 
 
 #define BAUDRATE 9600
 
 // For configuring arduino mega pin 25
-#define LED_INIT DDRA |= _BV(DDA3);
+#define LED_INIT DDRA |= _BV(DDA3)
+#define DOOR_INIT DDRA |= _BV(DDA1)
 #define LED_TOGGLE PORTA ^= _BV(PORTA3)
+#define DOOR_OPEN PORTA |= _BV(PORTA1)
+#define DOOR_CLOSE PORTA &= ~_BV(PORTA1)
 #define UART_STATUS_MASK    0x00FF
 
 // Current system time
@@ -59,8 +63,11 @@ static inline void init_rfid_reader(void)
 static inline void init_hw (void)
 {
     // IO init
-    /// Set arduino pin 25 as output
+    // Set arduino pin 25 as output
     LED_INIT;
+    
+    // Set Arduino pin 23 as output
+    DOOR_INIT;
 
     // System clock
     init_system_clock();
@@ -112,6 +119,48 @@ static inline void heartbeat (void)
     LED_TOGGLE;
 }
 
+static inline void handle_door() {
+    Uid uid;
+    card_t card;
+    uint32_t time_cur = time();
+    static uint32_t message_start;
+    static uint32_t door_open_start;
+    if (PICC_IsNewCardPresent()) {
+        PICC_ReadCardSerial(&uid);
+        card.uid_size = uid.size;
+        memcpy(&card.uid, &uid.uidByte, uid.size);
+        card.user = NULL;
+        card_t *found_card = rfid_find_card(&card);
+        if (found_card) {
+            lcd_goto(0x40);
+            lcd_puts(found_card->user);
+            for (int8_t i=16-strlen(found_card->user); i > -1; i--) {
+                lcd_putc(' ');
+            }
+            DOOR_OPEN;
+        } else {
+            DOOR_CLOSE;
+            lcd_goto(0x40);
+            lcd_puts("Access denied!");
+            for (int8_t i=4; i > -1; i--) {
+                lcd_putc(' ');
+            }
+        }
+        door_open_start = time_cur;
+        message_start = time_cur;
+    }
+    
+    if ((message_start+5) < time_cur) {
+        lcd_goto(0x40);
+        for (int8_t i=16; i > -1; i--) {
+            lcd_putc(' ');
+        }
+    }
+    
+    if ((door_open_start+2) < time_cur) {
+        DOOR_CLOSE;
+    }
+}
 
 int main (void)
 {
@@ -123,6 +172,7 @@ int main (void)
         heartbeat();
         // CLI commands are handled in cli_execute()
         microrl_insert_char (prl, cli_get_char());
+        handle_door();
     }
 }
 

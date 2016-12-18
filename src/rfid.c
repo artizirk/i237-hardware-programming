@@ -22,7 +22,7 @@ card_t* rfid_find_card(const card_t *card)
         while (current != NULL) {
             if ((current->uid_size != card->uid_size) ||
                 !memcmp(current->uid, card->uid, current->uid_size) ||
-                !strcmp(current->user, card->user)) {
+                ((card->user != NULL) && !strcmp(current->user, card->user))) {
                 
                 return current;
             }
