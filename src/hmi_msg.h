@@ -45,7 +45,8 @@
 #define CARD_SELECTED_MSG "Card selected!"
 #define UID_SIZE_MSG "UID size: 0x%02X"
 #define UID_SAK_MSG "UID sak: 0x%02X"
-
+#define CARD_UID_MSG "Card UID: "
+#define CARD_NOT_SELECTED "Unable to select card.\n"
 
 extern PGM_P const months[];
 
@@ -65,5 +66,6 @@ extern const char remove_cmd[];
 extern const char remove_help[];
 extern const char list_cmd[];
 extern const char list_help[];
+extern const char access_denied_msg[];
 
 #endif /* _HMI_MSG_H_ */

@@ -4,6 +4,7 @@
 #include <string.h>
 #include <avr/pgmspace.h>
 #include "rfid.h"
+#include "hmi_msg.h"
 
 card_t *head = NULL;
 
