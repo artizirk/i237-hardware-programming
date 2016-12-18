@@ -18,3 +18,5 @@ const char ascii_cmd[] PROGMEM = ASCII_CMD;
 const char ascii_help[] PROGMEM = ASCII_HELP;
 const char month_cmd[] PROGMEM = MONTH_CMD;
 const char month_help[] PROGMEM = MONTH_HELP;
+const char read_cmd[] PROGMEM = READ_CMD;
+const char read_help[] PROGMEM = READ_HELP;

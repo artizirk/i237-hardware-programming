@@ -6,6 +6,7 @@
 #include "hmi_msg.h"
 #include "print_helper.h"
 #include "cli_microrl.h"
+#include "../lib/matejx_avr_lib/mfrc522.h"
 
 typedef struct cli_cmd {
     PGM_P cmd;
@@ -19,7 +20,8 @@ const cli_cmd_t cli_cmds[] = {
     {help_cmd, help_help, cli_print_help, 0},
     {ver_cmd, ver_help, cli_print_ver, 0},
     {ascii_cmd, ascii_help, cli_print_ascii_tbls, 0},
-    {month_cmd, month_help, cli_handle_month, 1}
+    {month_cmd, month_help, cli_handle_month, 1},
+    {read_cmd, read_help, cli_rfid_read, 0}
 };
 
 
@@ -107,6 +109,28 @@ void cli_handle_month(const char *const *argv)
     // Clear the end of the line
     for (; spaces_to_print > -1; spaces_to_print--) {
         lcd_putc(' ');
+    }
+}
+
+
+void cli_rfid_read(const char *const *argv)
+{
+    (void) argv;
+    Uid uid;
+    Uid *uid_ptr = &uid;
+    printf_P(PSTR("\n"));
+    if (PICC_IsNewCardPresent()) {
+        printf("Card selected!\n");
+        PICC_ReadCardSerial(uid_ptr);
+        printf("UID size: 0x%02X\n", uid.size);
+        printf("UID sak: 0x%02X\n", uid.sak);
+        printf("Card UID: ");
+        for (byte i = 0; i < uid.size; i++) {
+            printf("%02X", uid.uidByte[i]);
+        }
+        printf_P(PSTR("\n"));
+    } else {
+        printf_P((PSTR("Unable to select card.\n")));
     }
 }
 
