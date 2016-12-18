@@ -1,4 +1,4 @@
-# I237 Hardware Programming
+# I237 Door Access program
 
 This here is my repository for hardware programming course at
 Estonian IT College that is based around a
