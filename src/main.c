@@ -141,8 +141,8 @@ static inline void handle_door() {
         } else {
             DOOR_CLOSE;
             lcd_goto(0x40);
-            lcd_puts("Access denied!");
-            for (int8_t i=4; i > -1; i--) {
+            lcd_puts_P(access_denied_msg);
+            for (int8_t i=16-strlen_P(access_denied_msg); i > -1; i--) {
                 lcd_putc(' ');
             }
         }
@@ -151,6 +151,7 @@ static inline void handle_door() {
     }
     
     if ((message_start+5) < time_cur) {
+        message_start = time_cur+5;
         lcd_goto(0x40);
         for (int8_t i=16; i > -1; i--) {
             lcd_putc(' ');

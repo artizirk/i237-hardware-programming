@@ -36,9 +36,9 @@ void rfid_add_card(const card_t *card)
 {
     card_t *found_card = rfid_find_card(card);
     if (found_card) {
-        printf("Found card \"");
+        printf_P(PSTR(NOT_ADDING_CARD_MSG1));
         rfid_print_card(found_card);
-        printf("\", not adding it again.\n");
+        printf_P(PSTR(NOT_ADDING_CARD_MSG2 "\n"));
         return;
     }
     
@@ -48,7 +48,7 @@ void rfid_add_card(const card_t *card)
     new_card = malloc(sizeof(card_t));
     new_card_user = malloc(strlen(card->user)+1);
     if (!new_card || !new_card_user) {
-        printf_P(PSTR("Out of memory. Please remove cards.\n"));
+        printf_P(PSTR(OUT_OF_MEMORY_MSG "\n"));
         return;
     }
     
@@ -75,17 +75,17 @@ void rfid_add_card(const card_t *card)
 
 void rfid_list_cards(void) {
     if (head == NULL) {
-        printf_P(PSTR("No cards added\n"));
+        printf_P(PSTR(NO_CARDS_ADDED_MSG "\n"));
     } else {
         card_t *current;
         current = head;
         while (current->next != NULL) {
             rfid_print_card(current);
-            printf("\n");
+            putc('\n', stdout);
             current = current->next;
         }
         rfid_print_card(current);
-        printf("\n");
+        putc('\n', stdout);
     }
 }
 
@@ -95,7 +95,7 @@ void rfid_remove_card_by_user(const char *user) {
     curr = head;
     prev = NULL;
     if (head == NULL) {
-        printf_P(PSTR("No cards added\n"));
+        printf_P(PSTR(NO_CARDS_ADDED_MSG "\n"));
         return;
     } else {
         while (curr->next != NULL) {
@@ -128,10 +128,9 @@ void rfid_remove_card_by_user(const char *user) {
             free(curr->user);
             free(curr);
         } else {
-            fprintf_P(stderr, PSTR("Invalid situation when removing card\n"));
+            printf_P(PSTR(LINKED_LIST_ERROR_MSG "\n"));
         }
     } else {
-        
-        printf_P(PSTR("Card not found\n"));
+        printf_P(PSTR(CARD_NOT_FOUND_MSG));
     }
 }

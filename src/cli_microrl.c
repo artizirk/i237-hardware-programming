@@ -49,7 +49,6 @@ char cli_get_char(void)
 void cli_print_help(const char *const *argv)
 {
     (void) argv;
-    putc('\n', stdout);
     printf_P(PSTR(CLI_HELP_MSG "\n"));
 
     for (uint8_t i = 0; i < NUM_ELEMS(cli_cmds); i++) {
@@ -75,7 +74,6 @@ void print_version(FILE *stream)
 void cli_print_ver(const char *const *argv)
 {
     (void) argv;
-    putc('\n', stdout);
     print_version(stdout);
 }
 
@@ -83,7 +81,6 @@ void cli_print_ver(const char *const *argv)
 void cli_print_ascii_tbls(const char *const *argv)
 {
     (void) argv;
-    putc('\n', stdout);
     // ASCII table print
     print_ascii_tbl(stdout);
     unsigned char ascii[128];
@@ -96,7 +93,6 @@ void cli_print_ascii_tbls(const char *const *argv)
 
 void cli_handle_month(const char *const *argv)
 {
-    putc('\n', stdout);
     lcd_goto(0x40); // Got to the beginning of the next line
     char spaces_to_print = 16;
     for (int i = 0; i < 6; i++) {
@@ -123,26 +119,24 @@ void cli_rfid_read(const char *const *argv)
     (void) argv;
     Uid uid;
     Uid *uid_ptr = &uid;
-    putc('\n', stdout);
     if (PICC_IsNewCardPresent()) {
-        printf("Card selected!\n");
+        printf(CARD_SELECTED_MSG "\n");
         PICC_ReadCardSerial(uid_ptr);
-        printf("UID size: 0x%02X\n", uid.size);
-        printf("UID sak: 0x%02X\n", uid.sak);
-        printf("Card UID: ");
+        printf_P(PSTR(UID_SIZE_MSG "\n"), uid.size);
+        printf_P(PSTR(UID_SAK_MSG"\n"), uid.sak);
+        printf_P(PSTR(CARD_UID_MSG));
         for (byte i = 0; i < uid.size; i++) {
             printf("%02X", uid.uidByte[i]);
         }
-        printf_P(PSTR("\n"));
+        putc('\n', stdout);
     } else {
-        printf_P((PSTR("Unable to select card.\n")));
+        printf_P((PSTR(CARD_NOT_SELECTED)));
     }
 }
 
 
 void cli_rfid_add(const char *const *argv) {
     (void) argv;
-    putc('\n', stdout);
     Uid uid;
     card_t card;
     if (PICC_IsNewCardPresent()) {
@@ -155,34 +149,30 @@ void cli_rfid_add(const char *const *argv) {
         rfid_add_card(&card);
         free(user); // card user has ben copied to the linked list
     } else {
-        printf_P(PSTR("Unable to detect card.\n"));
+        printf_P(PSTR(UNABLE_TO_DETECT_CARD_MSG "\n"));
     }    
 }
 
 
 void cli_rfid_remove(const char *const *argv) {
     (void) argv;
-    putc('\n', stdout);
     rfid_remove_card_by_user(argv[1]);
 }
 
 void cli_rfid_list(const char *const *argv) {
     (void) argv;
-    putc('\n', stdout);
     rfid_list_cards();
 }
 
 
 void cli_print_cmd_error(void)
 {
-    putc('\n', stdout);
     printf_P(PSTR(CLI_NO_CMD "\n"));
 }
 
 
 void cli_print_cmd_arg_error(void)
 {
-    putc('\n', stdout);
     printf_P(PSTR(CLI_ARGS_MSG "\n"));
 }
 
@@ -191,6 +181,7 @@ int cli_execute(int argc, const char *const *argv)
 {
     for (uint8_t i = 0; i < NUM_ELEMS(cli_cmds); i++) {
         if (!strcmp_P(argv[0], cli_cmds[i].cmd)) {
+            putc('\n', stdout);
             // Test do we have correct arguments to run command
             // Function arguments count shall be defined in struct
             if ((argc - 1) != cli_cmds[i].func_argc) {
@@ -204,7 +195,7 @@ int cli_execute(int argc, const char *const *argv)
             return 0;
         }
     }
-
+    putc('\n', stdout);
     cli_print_cmd_error();
     return 0;
 }

@@ -11,21 +11,40 @@
 #define HELP_HELP "Get help"
 #define VER_CMD "version"
 #define VER_HELP "Print FW version"
+
 #define ASCII_CMD "ascii"
 #define ASCII_HELP "print ASCII tables"
+
 #define MONTH_CMD "month"
 #define MONTH_HELP "Find matching month from lookup list. Usage: month <string>"
+
 #define CLI_HELP_MSG "Implemented commands:"
 #define CLI_NO_CMD "Command not implemented.\n Use <help> to get help."
 #define CLI_ARGS_MSG "To few or to many arguments for this command\nUse <help>"
+
 #define READ_CMD "read"
 #define READ_HELP "Read and print out card info that is currently in proximity of the reader"
+
 #define ADD_CMD "add"
 #define ADD_HELP "Add a new card to the system. Usage: add <username>"
+
 #define REMOVE_CMD "remove"
 #define REMOVE_HELP "Remove a card from the system. Usage: remove <username>"
+
 #define LIST_CMD "list"
 #define LIST_HELP "List all added cards"
+
+#define ACCESS_DENIED_MSG "Access denied!"
+#define NOT_ADDING_CARD_MSG1 "Found card \""
+#define NOT_ADDING_CARD_MSG2 "\", not adding it again."
+#define OUT_OF_MEMORY_MSG "Out of memory. Please remove cards."
+#define NO_CARDS_ADDED_MSG "No cards added"
+#define CARD_NOT_FOUND_MSG "Card not found"
+#define LINKED_LIST_ERROR_MSG "Invalid situation when removing card"
+#define UNABLE_TO_DETECT_CARD_MSG "Unable to detect card."
+#define CARD_SELECTED_MSG "Card selected!"
+#define UID_SIZE_MSG "UID size: 0x%02X"
+#define UID_SAK_MSG "UID sak: 0x%02X"
 
 
 extern PGM_P const months[];
