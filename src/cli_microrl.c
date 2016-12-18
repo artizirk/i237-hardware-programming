@@ -25,7 +25,7 @@ const cli_cmd_t cli_cmds[] = {
     {month_cmd, month_help, cli_handle_month, 1},
     {read_cmd, read_help, cli_rfid_read, 0},
     {add_cmd, add_help, cli_rfid_add, 1},
-    {remove_cmd, remove_help, cli_rfid_remove, 0},
+    {remove_cmd, remove_help, cli_rfid_remove, 1},
     {list_cmd, list_help, cli_rfid_list, 0}
 };
 
@@ -146,7 +146,6 @@ void cli_rfid_add(const char *const *argv) {
     Uid uid;
     card_t card;
     if (PICC_IsNewCardPresent()) {
-        printf_P(PSTR("Adding a card\n"));
         PICC_ReadCardSerial(&uid);
         card.uid_size = uid.size;
         memcpy(&card.uid, &uid.uidByte, uid.size);
@@ -164,7 +163,7 @@ void cli_rfid_add(const char *const *argv) {
 void cli_rfid_remove(const char *const *argv) {
     (void) argv;
     putc('\n', stdout);
-    printf("TODO: Remove card\n");
+    rfid_remove_card_by_user(argv[1]);
 }
 
 void cli_rfid_list(const char *const *argv) {

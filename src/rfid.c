@@ -36,8 +36,9 @@ void rfid_add_card(const card_t *card)
 {
     card_t *found_card = rfid_find_card(card);
     if (found_card) {
+        printf("Found card \"");
         rfid_print_card(found_card);
-        printf("\n");
+        printf("\", not adding it again.\n");
         return;
     }
     
@@ -88,5 +89,49 @@ void rfid_list_cards(void) {
     }
 }
 
-
-
+void rfid_remove_card_by_user(const char *user) {
+    card_t *curr;
+    card_t *prev;
+    curr = head;
+    prev = NULL;
+    if (head == NULL) {
+        printf_P(PSTR("No cards added\n"));
+        return;
+    } else {
+        while (curr->next != NULL) {
+            if (strcmp(curr->user, user) == 0) {
+                break;
+            }
+            prev = curr;
+            curr = curr->next;
+        }
+    }
+    if (strcmp(curr->user, user) == 0) {
+        if (prev == NULL && curr->next == NULL) {
+            // this is the single card in the list
+            free(curr->user);
+            free(curr);
+            head = NULL;
+        } else if (prev == NULL && curr->next != NULL) {
+            // this is the first card in the list, with more after it
+            head = curr->next;
+            free(curr->user);
+            free(curr);
+        } else if (prev != NULL && curr->next != NULL) {
+            // this card is somewhere in the middle of the list
+            prev->next = curr->next;
+            free(curr->user);
+            free(curr);
+        } else if(prev != NULL && curr->next == NULL) {
+            // this is the last card in the list
+            prev->next = NULL;
+            free(curr->user);
+            free(curr);
+        } else {
+            fprintf_P(stderr, PSTR("Invalid situation when removing card\n"));
+        }
+    } else {
+        
+        printf_P(PSTR("Card not found\n"));
+    }
+}
