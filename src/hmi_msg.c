@@ -18,6 +18,7 @@
 #include <avr/pgmspace.h>
 #include "hmi_msg.h"
 
+
 static const char m1[] PROGMEM = "January";
 static const char m2[] PROGMEM = "February";
 static const char m3[] PROGMEM = "March";
@@ -43,5 +44,4 @@ const char remove_cmd[] PROGMEM = REMOVE_CMD;
 const char remove_help[] PROGMEM = REMOVE_HELP;
 const char list_cmd[] PROGMEM = LIST_CMD;
 const char list_help[] PROGMEM = LIST_HELP;
-
 const char access_denied_msg[] PROGMEM = ACCESS_DENIED_MSG;

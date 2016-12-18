@@ -19,7 +19,9 @@
 #include <stdio.h>
 #include "../lib/andygock_avr-uart/uart.h"
 
+
 #define UART_STATUS_MASK    0x00FF
+
 
 int uart0_putc_wrap(char c, FILE *stream)
 {
@@ -33,6 +35,7 @@ int uart0_putc_wrap(char c, FILE *stream)
     return 0;
 }
 
+
 int uart0_getc_wrap(FILE *stream)
 {
     (void) stream;
@@ -42,6 +45,7 @@ int uart0_getc_wrap(FILE *stream)
     // is not currently necessary.
     return uart0_getc() & UART_STATUS_MASK;
 }
+
 
 int uart3_putc_wrap(char c, FILE *stream)
 {

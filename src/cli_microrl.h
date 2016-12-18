@@ -21,6 +21,7 @@
 #define NUM_ELEMS(x)        (sizeof(x) / sizeof((x)[0]))
 #define UART_STATUS_MASK    0x00FF
 
+
 void cli_print(const char * str);
 char cli_get_char(void);
 void cli_print_help(const char *const *argv);

@@ -23,7 +23,9 @@
 #include "rfid.h"
 #include "hmi_msg.h"
 
+
 card_t *head = NULL;
+
 
 void rfid_print_card(const card_t *card)
 {
@@ -32,6 +34,7 @@ void rfid_print_card(const card_t *card)
     }
     printf(": %s", card->user);
 }
+
 
 card_t* rfid_find_card(const card_t *card)
 {
@@ -50,6 +53,7 @@ card_t* rfid_find_card(const card_t *card)
     }
     return NULL;
 }
+
 
 void rfid_add_card(const card_t *card)
 {
@@ -92,6 +96,7 @@ void rfid_add_card(const card_t *card)
     return;
 }
 
+
 void rfid_list_cards(void)
 {
     if (head == NULL) {
@@ -108,6 +113,7 @@ void rfid_list_cards(void)
         putc('\n', stdout);
     }
 }
+
 
 void rfid_remove_card_by_user(const char *user)
 {

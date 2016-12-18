@@ -27,6 +27,7 @@
 #include "../lib/matejx_avr_lib/mfrc522.h"
 #include "rfid.h"
 
+
 typedef struct cli_cmd {
     PGM_P cmd;
     PGM_P help;
@@ -177,6 +178,7 @@ void cli_rfid_remove(const char *const *argv)
     (void) argv;
     rfid_remove_card_by_user(argv[1]);
 }
+
 
 void cli_rfid_list(const char *const *argv)
 {

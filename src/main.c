@@ -33,6 +33,7 @@
 #include "rfid.h"
 
 
+// uart0 and uart3 will run at this speed
 #define BAUDRATE 9600
 
 // For configuring arduino mega pin 25
@@ -59,6 +60,7 @@ static inline void init_system_clock(void)
     OCR5A = 62549; // 1 s
     TIMSK5 |= _BV(OCIE5A); // Output Compare A Match Interrupt Enable
 }
+
 
 static inline uint32_t time(void)
 {
@@ -106,6 +108,7 @@ static inline void init_hw (void)
     sei();
 }
 
+
 static inline void start_ui (void)
 {
     print_version(stderr);
@@ -116,6 +119,7 @@ static inline void start_ui (void)
     lcd_puts_P(PSTR(STUD_NAME));
 }
 
+
 static inline void start_cli(void)
 {
     // Call init with ptr to microrl instance and print callback
@@ -123,6 +127,7 @@ static inline void start_cli(void)
     // Set callback for execute
     microrl_set_execute_callback (prl, cli_execute);
 }
+
 
 static inline void heartbeat (void)
 {
@@ -135,6 +140,7 @@ static inline void heartbeat (void)
     fprintf_P(stderr, PSTR(UPTIME_MSG "\n"), time_cur);
     LED_TOGGLE;
 }
+
 
 static inline void handle_door()
 {
@@ -169,6 +175,8 @@ static inline void handle_door()
     }
 
     if ((message_start + 5) < time_cur) {
+        // clean the screen once again in 10 secconds so that cli command
+        // `month` could show found months for some time
         message_start = time_cur + 5;
         lcd_goto(0x40);
         for (int8_t i = 16; i > -1; i--) {
@@ -180,6 +188,7 @@ static inline void handle_door()
         DOOR_CLOSE;
     }
 }
+
 
 int main (void)
 {
