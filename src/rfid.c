@@ -72,6 +72,8 @@ void rfid_add_card(const card_t *card)
     new_card_user = malloc(strlen(card->user) + 1);
     if (!new_card || !new_card_user) {
         printf_P(PSTR(OUT_OF_MEMORY_MSG "\n"));
+        free(new_card_user);
+        free(new_card);
         return;
     }
 
