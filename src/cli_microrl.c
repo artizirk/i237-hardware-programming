@@ -163,6 +163,10 @@ void cli_rfid_add(const char *const *argv)
         card.uid_size = uid.size;
         memcpy(&card.uid, &uid.uidByte, uid.size);
         char *user = malloc(strlen(argv[1]) + 1);
+        if(!user) {
+            printf_P(PSTR(OUT_OF_MEMORY_MSG "\n"));
+            return;
+        }
         strcpy(user, argv[1]);
         card.user = user;
         rfid_add_card(&card);
